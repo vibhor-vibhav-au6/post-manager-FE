@@ -1,24 +1,17 @@
-const express = require('express')
-require('./db/mongoose')
-const userRouter = require('./routers/user')
-const postRouter = require('./routers/post')
-const commentRouter = require('./routers/comment')
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
 
-const app = express()
-const port = process.env.PORT || 3001
+import App from './components/App';
+import reducers from './reducers';
 
+const store = createStore(reducers, applyMiddleware(thunk))
 
-
-app.use(express.json())
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    next();
-  });
-app.use(userRouter)
-app.use(postRouter)
-app.use(commentRouter)
-
-app.listen(port, () => {
-    console.log('Server is up on port ' + port)
-})
-
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.querySelector('#root')
+);
